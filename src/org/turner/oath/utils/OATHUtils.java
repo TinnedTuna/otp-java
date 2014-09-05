@@ -1,6 +1,10 @@
 package org.turner.oath.utils;
 
-public class OathUtils {
+import java.security.InvalidKeyException;
+import javax.crypto.Mac;
+import javax.crypto.spec.SecretKeySpec;
+
+public class OATHUtils {
   
   private static final int[] DIGITS_POWER = { 1
                                             , 10
@@ -82,5 +86,35 @@ public class OathUtils {
     longBytes[6] = (byte) ((inputLong >> 8) & 0xff);
     longBytes[7] = (byte) (inputLong & 0xff);
     return longBytes;
+  }
+  
+  public static byte[] macBytes(final Mac mac, final byte[] secretKey, final long message) {
+    assert secretKey != null;
+    assert mac != null;
+    
+    try {
+      mac.init(new SecretKeySpec(secretKey, "RAW"));
+      byte[] timeStepBytes = OATHUtils.longBytes(message);
+      return mac.doFinal(timeStepBytes);
+    } catch (InvalidKeyException ex) {
+      throw new IllegalStateException(ex);
+    } finally {
+      mac.reset();
+    }
+  }
+  
+  public static boolean constantTimeEquals(String left, String right) {
+    assert left != null;
+    assert right != null;
+    
+    if (left.length() != right.length()) {
+      return false;
+    }
+    
+    int result = 0;
+    for (int i = 0; i < left.length(); i++) {
+      result |= left.charAt(i) ^ right.charAt(i);
+    }
+    return result == 0;
   }
 }
