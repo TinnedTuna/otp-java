@@ -1,6 +1,6 @@
 # OTP Java
 
-This is for producing and verifying one-time passwords according to RFC 1760,
+This is for producing and verifying one-time passwords according to RFC 2289,
 RFC 6238 and RFC 4226.
 
 # Stability
@@ -32,15 +32,10 @@ For validation, you should take the user details from your data store,
 instantiate a OATHSecretState and the relevant OATHGenerator, and use the 
 OATHValidator to do all the heavy lifting.
 
+## OPIE Passwords
+
+OPIE Passwords are very similar as above.
+
 ## What We Don't Do
 
-We do not update the secret state. For example, HOTP uses a state which 
-includes a counter. It is currently the caller's responsibility to update this
-counter in your datastore.
-
-# Future
-
-I hope to be able to use S/Key (or similar) to produce word-based OTPs that can
-be used for paper-based and memory-based authentication.
-
-
+We do not provide randomness! Use SecureRandom for that.

@@ -2,7 +2,7 @@
 <project name="otp-java" default="dist" basedir=".">
   <description>
       Allows callers to generate and verify one-time passwords according to RFC
-      1760, 4226 and 6238.
+      2289, 4226 and 6238.
   </description>
   <property name="src" location="src"/>
   <property name="build" location="build"/>
