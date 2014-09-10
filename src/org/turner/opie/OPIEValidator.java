@@ -18,20 +18,8 @@ public class OPIEValidator {
     assert opieGenerator != null;
     byte[] generatedOPIE = opieGenerator.generateOPIEBytes(secretState);
     return OPIEUtils.constantTimeEquals(generatedOPIE, 
-            OPIEUtils.fromDictionaryWords(userSuppliedOPIE));
+            OPIEUtils.wordsToBytes(userSuppliedOPIE));
   }
-  
-  public static OPIESecretState generateNextState(
-          final OPIESecretState opieSecretState,
-          final OPIEGenerator opieGenerator) {
-    assert opieSecretState != null;
-    assert opieGenerator != null;
-    byte[] nextSecret = opieGenerator.generateOPIEBytes(opieSecretState);
-    return new OPIESecretState(
-            nextSecret, 
-            opieSecretState.getSeed(), 
-            opieSecretState.getHashCounts() - 1, 
-            opieSecretState.getMessageDigest());
-  }
+
   
 }

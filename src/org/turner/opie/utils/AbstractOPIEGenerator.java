@@ -20,13 +20,7 @@ public abstract class AbstractOPIEGenerator implements OPIEGenerator {
   
   public String generateOPIEString(final OPIESecretState opieSecretState) {
     assert opieSecretState != null;
-    
-    MessageDigest messageDigest = opieSecretState.getMessageDigest();
-    
-    messageDigest.update(opieSecretState.getSeed());
-    byte[] digested = messageDigest.digest(opieSecretState.getSecret());
-    byte[] nextSecret = foldTo64Bits(digested);
-    return OPIEUtils.toDictionary(nextSecret);
+    return OPIEUtils.bytesToWords(generateOPIEBytes(opieSecretState));
   }
   
   public byte[] generateOPIEBytes(final OPIESecretState opieSecretState) {

@@ -1,10 +1,10 @@
 package org.turner.opie.utils;
 
-import java.io.BufferedInputStream;
-import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  *
@@ -23,20 +23,49 @@ public class OPIEUtils {
       String entireDictionary = new String(inputBuffer);
       DICTIONARY = entireDictionary.split("\n");
     } catch (IOException ex) {
-      ex.printStackTrace();
+      throw new IllegalStateException("Could not load dictionary, IOException.", ex);
     }
   }
-  public static String toDictionary(byte[] input) {
+  
+  public static String bytesToWords(byte[] input) {
     assert input != null;
     assert input.length == 8;
-    return "UNIMPLEMENTED";
+    
+    StringBuilder passwordBuilder = new StringBuilder(30);
+    // TODO, Parity?
+    
+    for (int i = 0; i < 6; i++) {
+      int bits = extractBitsFromBytes(input, i*11, 11);
+      assert DICTIONARY != null;
+      assert bits < DICTIONARY.length;
+      assert bits >= 0;
+      passwordBuilder.append(DICTIONARY[bits]);
+      if (i<5) {
+        passwordBuilder.append(" ");
+      }
+    }
+    return passwordBuilder.toString();
   }
   
-  public static byte[] fromDictionaryWords(String userSuppliedOtp) {
+  public static byte[] wordsToBytes(String userSuppliedOtp) {
     assert userSuppliedOtp != null;
     byte[] userSuppliedOtpBytes = new byte[8];
     String[] splitOtp = userSuppliedOtp.split(" ");
     
+    // TODO, Parity?
+    // TODO, check that we have the correct number of words?
+    
+    int i = 0;
+    for (String word : splitOtp) {
+      int findWordLocation = findWordLocation(word);
+      
+      assert findWordLocation >= 0;
+      assert findWordLocation < 2048;
+      
+      insertBitsIntoBytes(userSuppliedOtpBytes, findWordLocation, i*11, 11);
+      i += 1;
+    }
+    return userSuppliedOtpBytes;
   }
   
   public static boolean constantTimeEquals(final byte[] left, final byte[] right) {
@@ -52,5 +81,70 @@ public class OPIEUtils {
       result |= left[i] ^ right[i];
     }
     return result == 0;
+  }
+  
+  private static int extractBitsFromBytes(
+          final byte[] input,
+          final int offset,
+          final int numberOfBits
+          ) {
+    assert input != null;
+    assert input.length > 0;
+    assert numberOfBits <= 11;
+    assert numberOfBits > 0;
+    assert offset >= 0;
+    assert offset + numberOfBits < input.length;
+    
+    int result = 0;
+    return result;
+  }
+  
+  private static void insertBitsIntoBytes(
+          final byte[] bytes,
+          final int bitsToInsert,
+          final int offset,
+          final int bitLength) {
+    assert bytes != null;
+    assert offset > 0;
+    assert bitLength > 0;
+    assert offset + bitLength <= bytes.length;
+    
+  }
+  
+  private static int findWordLocation(final String word) {
+    assert word != null;
+    assert word.length() <= 4;
+    assert word.length() > 0;
+    assert DICTIONARY != null;
+    assert DICTIONARY.length > 0;
+    assert DICTIONARY.length <= 2048;
+    assert Arrays.asList(DICTIONARY).contains(word);
+    
+    if (word.length() == 4) {
+      return findLongWordLocation(word);
+    } else if (word.length() < 4) {
+      return findShortWordLocation(word);
+    } else {
+      throw new IllegalStateException("Word " + word + " had illegal length.");
+    }
+  }
+  
+  private static int findLongWordLocation(final String fourLetterWord) {
+    assert fourLetterWord != null;
+    assert fourLetterWord.length() == 4;
+    assert DICTIONARY != null;
+    assert DICTIONARY.length > 0;
+    assert DICTIONARY.length <= 2048;
+    return Arrays.binarySearch(DICTIONARY, 571, 2047, fourLetterWord);
+  }
+  
+  private static int findShortWordLocation(final String shortWord) {
+    assert shortWord != null;
+    assert shortWord.length() > 0;
+    assert shortWord.length() < 3;
+    assert DICTIONARY != null;
+    assert DICTIONARY.length > 0;
+    assert DICTIONARY.length <= 2048;
+    return Arrays.binarySearch(DICTIONARY, 0, 570, shortWord);
   }
 }
