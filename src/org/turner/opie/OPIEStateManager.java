@@ -29,6 +29,14 @@ public class OPIEStateManager {
             opieSecretState.getMessageDigest());
   }
   
+  /**
+   * Generate a new state, usually used to enroll a new user in the system.
+   * 
+   * @param secureRandom
+   * @param messageDigest
+   * @param hashCounter
+   * @return The new user's state.
+   */
   public static OPIESecretState generateNewState(
           final SecureRandom secureRandom,
           final MessageDigest messageDigest,
