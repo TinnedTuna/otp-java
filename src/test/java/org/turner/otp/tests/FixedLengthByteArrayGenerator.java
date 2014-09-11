@@ -21,10 +21,11 @@ public class FixedLengthByteArrayGenerator implements Generator<byte[]> {
   
   @Override
   public byte[] next() {
-    List<Byte> tempBytes = new ArrayList<Byte>(byteArrayLength);
+    byte[] resultBytes = new byte[byteArrayLength];
     for (int i = 0; i < byteArrayLength; i++) {
-      tempBytes
+      resultBytes[i] = BYTE_GENERATOR.next();
     }
+    return resultBytes;
   }
   
 }
