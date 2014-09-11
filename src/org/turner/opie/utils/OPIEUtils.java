@@ -95,7 +95,16 @@ public class OPIEUtils {
     assert offset >= 0;
     assert offset + numberOfBits < input.length;
     
-    int result = 0;
+    byte cl, cc, cr;
+    int result;
+    
+    cl = input[offset / 8]; 
+    cc = input[offset / 8 + 1]; 
+    cr = input[offset / 8 + 2]; 
+    result = ((int)(cl << 8 | cc) << 8 | cr);
+    result = result >> (24 - (numberOfBits + (offset % 8)));
+    result = (result & (0xffff >> (16 - numberOfBits)));
+
     return result;
   }
   
@@ -108,7 +117,26 @@ public class OPIEUtils {
     assert offset > 0;
     assert bitLength > 0;
     assert offset + bitLength <= bytes.length;
+
+    int shift;
+    int y;
+    byte cl, cc, cr;
     
+    shift = ((8 - ((offset + bitLength) % 8)) % 8);
+    y = bitsToInsert << shift;
+    cl = (byte) ((y >> 16) & 0xff);
+    cc = (byte) ((y >> 8) & 0xff);
+    cr = (byte) (y & 0xff);
+    if (shift + bitLength > 16) {
+      bytes[offset / 8] |= cl;
+      bytes[offset / 8 + 1] |= cc;
+      bytes[offset / 8 + 2] |= cr;
+    } else if (shift + bitLength > 8) {
+      bytes[offset / 8] |= cc;
+      bytes[offset / 8 + 1] |= cr;
+    } else {
+      bytes[offset / 8] |= cr;
+    }
   }
   
   private static int findWordLocation(final String word) {
