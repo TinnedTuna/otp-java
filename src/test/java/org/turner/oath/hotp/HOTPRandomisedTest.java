@@ -10,6 +10,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 import org.turner.oath.OATHGenerator;
+import org.turner.oath.OATHValidator;
 import org.turner.otp.generators.HOTPStateGenerator;
 
 /**
@@ -20,17 +21,16 @@ import org.turner.otp.generators.HOTPStateGenerator;
 public class HOTPRandomisedTest {
   
   @Test
-  public void lengthProperty() throws NoSuchAlgorithmException {
+  public void hotpLengthProperty() throws NoSuchAlgorithmException {
     OATHGenerator oathGenerator = new HOTPGenerator(Mac.getInstance("HmacSHA1"));
     for (HOTPSecretState secretState : Iterables.toIterable(new HOTPStateGenerator())) {
       String generateOtp = oathGenerator.generateOtp(secretState);
-      Assert.assertTrue(generateOtp.length() >= 6);
-      Assert.assertTrue(generateOtp.length() <= 8);
+      Assert.assertEquals(secretState.getLength(), generateOtp.length());
     }
   }
   
   @Test
-  public void allIntegers() throws NoSuchAlgorithmException {
+  public void hotpAllIntegers() throws NoSuchAlgorithmException {
     Pattern digitsMatcher = Pattern.compile("\\d{6,8}");
     OATHGenerator oathGenerator = new HOTPGenerator(Mac.getInstance("HmacSHA1"));
     for (HOTPSecretState secretState : Iterables.toIterable(new HOTPStateGenerator())) {
@@ -39,4 +39,15 @@ public class HOTPRandomisedTest {
       Assert.assertTrue(matcher.matches());
     }
   }
+  
+  @Test
+  public void hotpValidates() throws NoSuchAlgorithmException {
+  OATHGenerator oathGenerator = new HOTPGenerator(Mac.getInstance("HmacSHA1"));
+    for (HOTPSecretState secretState : Iterables.toIterable(new HOTPStateGenerator())) {
+      String generatedOtp = oathGenerator.generateOtp(secretState);
+      Assert.assertTrue(OATHValidator.validateOtp(generatedOtp, secretState, oathGenerator));
+    }
+  }
+  
+
 }
