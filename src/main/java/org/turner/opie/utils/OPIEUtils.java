@@ -93,6 +93,10 @@ public class OPIEUtils {
     assert offset >= 0;
     assert offset + numberOfBits <= 66;
     
+    assert offset / 8 < input.length;
+    assert offset / 8 + 1 < input.length;
+    assert offset / 8 + 2 < input.length;
+    
     byte cl, cc, cr;
     int result;
     

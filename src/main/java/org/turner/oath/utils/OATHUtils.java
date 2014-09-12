@@ -47,6 +47,7 @@ public class OATHUtils {
             );
     
     int truncatedOtp = binary % DIGITS_POWER[numberOfOutputDigits - 1];
+    assert truncatedOtp >= 0;
     String result = Integer.toString(truncatedOtp);
     
     if (result.length() < numberOfOutputDigits) {

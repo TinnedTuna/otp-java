@@ -25,10 +25,7 @@ public class OPIERandomisedTest {
   public void bytesToWords() {
     for (byte[] bytes : Iterables.toIterable(new FixedLengthByteArrayGenerator(8))) {
       Assert.assertEquals(bytes, 
-              OPIEUtils.wordsToBytes(
-              OPIEUtils.bytesToWords(bytes)
-              )
-              );
+              OPIEUtils.wordsToBytes(OPIEUtils.bytesToWords(bytes)));
     }
   }
   
@@ -42,7 +39,6 @@ public class OPIERandomisedTest {
       Assert.assertEquals(6, split.length);
     }
   }
-  
     
   @Test
   public void sizeOfMD5OTP() throws NoSuchAlgorithmException {
