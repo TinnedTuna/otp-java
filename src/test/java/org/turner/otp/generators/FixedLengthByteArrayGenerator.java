@@ -1,6 +1,5 @@
-package org.turner.otp.tests;
+package org.turner.otp.generators;
 
-import java.util.ArrayList;
 import net.java.quickcheck.Generator;
 import net.java.quickcheck.generator.support.ByteGenerator;
 

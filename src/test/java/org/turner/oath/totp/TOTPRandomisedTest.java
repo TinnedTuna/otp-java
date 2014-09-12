@@ -4,6 +4,6 @@ package org.turner.oath.totp;
  *
  * @author turner
  */
-public class RFCTests {
+public class TOTPRandomisedTest {
   
 }

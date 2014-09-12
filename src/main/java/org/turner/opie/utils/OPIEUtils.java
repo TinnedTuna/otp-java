@@ -91,7 +91,7 @@ public class OPIEUtils {
     assert numberOfBits <= 11;
     assert numberOfBits > 0;
     assert offset >= 0;
-    assert offset + numberOfBits < input.length;
+    assert offset + numberOfBits <= 66;
     
     byte cl, cc, cr;
     int result;
