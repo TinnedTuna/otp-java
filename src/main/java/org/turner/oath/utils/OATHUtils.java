@@ -1,5 +1,7 @@
 package org.turner.oath.utils;
 
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
 import java.security.InvalidKeyException;
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
@@ -30,6 +32,7 @@ public class OATHUtils {
     truncated[1] = inputBytes[offsetLocation + 1];
     truncated[2] = inputBytes[offsetLocation + 2];
     truncated[3] = inputBytes[offsetLocation + 3];
+    assert (truncated[0] & 0x80) != 0x80;
     return truncated;
   }
   
@@ -38,17 +41,14 @@ public class OATHUtils {
     assert inputIntBytes.length == 4;
     assert numberOfOutputDigits != 0;
     assert numberOfOutputDigits <= 8;
-    
-    int binary = (
-            inputIntBytes[0] << 24 |
-            inputIntBytes[1] << 16 |
-            inputIntBytes[2] << 8  |
-            inputIntBytes[3]
-            );
-    
+    ByteBuffer wrappedBytes = ByteBuffer.wrap(inputIntBytes);
+    wrappedBytes.order(ByteOrder.BIG_ENDIAN);
+    int binary = wrappedBytes.getInt();
+    assert binary >= 0;
     int truncatedOtp = binary % DIGITS_POWER[numberOfOutputDigits - 1];
     assert truncatedOtp >= 0;
     String result = Integer.toString(truncatedOtp);
+    assert !result.startsWith("-");
     
     if (result.length() < numberOfOutputDigits) {
       return prependPad(result, '0', numberOfOutputDigits);
@@ -61,7 +61,7 @@ public class OATHUtils {
     assert value != null;
     assert size > value.length();
     
-    int requiredPadSize = value.length() - size;
+    int requiredPadSize = size - value.length();
     assert requiredPadSize > 0;
     
     StringBuilder paddedResult = new StringBuilder(size);
