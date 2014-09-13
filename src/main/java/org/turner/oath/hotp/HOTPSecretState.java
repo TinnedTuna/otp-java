@@ -15,7 +15,7 @@ public class HOTPSecretState extends AbstractOATHSecretState {
           final int length, 
           final long counter) {
     super(secret, length);
-    assert counter > 0;
+    assert counter >= 0;
     this.counter = counter;
   }
   

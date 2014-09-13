@@ -19,7 +19,7 @@ public class TOTPGenerator extends AbstractOATHGenerator {
   protected byte[] getInternalState(final OATHSecretState secretState) {
     assert secretState instanceof TOTPSecretState;
     TOTPSecretState totpSecretState = (TOTPSecretState) secretState;
-    return OATHUtils.longBytes(totpSecretState.getTimeStepValue());
+    return OATHUtils.longBytes(totpSecretState.getCurrentTimeStepValue());
   }
   
 }

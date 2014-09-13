@@ -1,6 +1,5 @@
 package org.turner.oath.totp;
 
-import java.math.BigInteger;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 import java.util.Collection;
@@ -12,6 +11,7 @@ import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 import org.turner.oath.OATHGenerator;
 import org.turner.oath.OATHSecretState;
+import org.turner.oath.TestUtils;
 import org.turner.oath.utils.OATHUtils;
 
 /**
@@ -21,9 +21,9 @@ import org.turner.oath.utils.OATHUtils;
 @RunWith(Parameterized.class)
 public class TOTPRFCTest {
   
-  private static final byte[] SHA1_SEED = OATHUtils.hexStringToBytes("3132333435363738393031323334353637383930");
-  private static final byte[] SHA256_SEED = OATHUtils.hexStringToBytes("3132333435363738393031323334353637383930313233343536373839303132");
-  private static final byte[] SHA512_SEED = OATHUtils.hexStringToBytes("31323334353637383930313233343536373839303132333435363738393031323334353637383930313233343536373839303132333435363738393031323334");
+  private static final byte[] SHA1_SEED = TestUtils.hexStringToBytes("3132333435363738393031323334353637383930");
+  private static final byte[] SHA256_SEED = TestUtils.hexStringToBytes("3132333435363738393031323334353637383930313233343536373839303132");
+  private static final byte[] SHA512_SEED = TestUtils.hexStringToBytes("31323334353637383930313233343536373839303132333435363738393031323334353637383930313233343536373839303132333435363738393031323334");
   
   @Parameters
   public static Collection<Object[]> rfcTestVectors() {
@@ -66,8 +66,7 @@ public class TOTPRFCTest {
   @Test
   public void rfcVector() throws NoSuchAlgorithmException {
     OATHGenerator totpGenerator = getTOTPGenerator(algorithmName);
-    long currentTimeStep = OATHUtils.getCurrentTimeStep(0, currentUnixTime, 30);
-    String generateOtp = totpGenerator.generateOtp(getOATHSecretState(secret, currentTimeStep));
+    String generateOtp = totpGenerator.generateOtp(getOATHSecretState(secret, 0, currentUnixTime, 30));
     Assert.assertEquals(expectedOtp, generateOtp);
   }
   
@@ -76,7 +75,11 @@ public class TOTPRFCTest {
     return new TOTPGenerator(sha1Mac);
   }
   
-  private static OATHSecretState getOATHSecretState(byte[] seed, long timeStep) {
-    return new TOTPSecretState(seed, 8, timeStep);
+  private static OATHSecretState getOATHSecretState(
+          byte[] seed, 
+          long initialUnixTime,
+          long currentTime,
+          long timeStep) {
+    return new TOTPSecretState(seed, 8, initialUnixTime, currentTime, timeStep);
   }
 }
