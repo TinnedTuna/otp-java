@@ -13,24 +13,20 @@ public class TOTPStateGenerator implements Generator<TOTPSecretState> {
 
   private static final Generator<Integer> lengthGenerator = new IntegerGenerator(6, 8);
   private static final Generator<Long> timeStepGenerator = new LongGenerator(1, Long.MAX_VALUE);
-  private static final Generator<Long> currentTimeGenerator = new LongGenerator(1, Long.MAX_VALUE);
-  private static final Generator<Long> epochGenerator = new LongGenerator(1, Long.MAX_VALUE);
+  private static final Generator<Long> currentUnixTimeGenerator = new LongGenerator(1, Long.MAX_VALUE);
+  private static final Generator<Long> initialUnixTimeGenerator = new LongGenerator(1, Long.MAX_VALUE);
   private static final Generator<byte[]> secretGenerator = new FixedLengthByteArrayGenerator(8);
   
   @Override
   public TOTPSecretState next() {
     byte[] secretBytes = secretGenerator.next();
     Integer otpLength = lengthGenerator.next();
-    Long currentTime = currentTimeGenerator.next();
+    Long currentUnixTime = currentUnixTimeGenerator.next();
     Long timeStep = timeStepGenerator.next();
-    Long epoch = epochGenerator.next();
-    if (currentTime < epoch) {
-      currentTime = epoch - currentTime;
-    }
-    assert currentTime <= epoch;
-    assert currentTime >= 0;
+    Long initialUnixTime = initialUnixTimeGenerator.next();
+    assert currentUnixTime >= 0;
     
-    return new TOTPSecretState(secretBytes, otpLength, timeStep, epoch, currentTime);
+    return new TOTPSecretState(secretBytes, otpLength, timeStep, initialUnixTime, currentUnixTime);
   }
   
 }
