@@ -10,6 +10,7 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.turner.oath.OATHGenerator;
 import org.turner.oath.OATHSecretState;
+import org.turner.oath.OATHStateManager;
 import org.turner.oath.OATHValidator;
 import org.turner.oath.TestUtils;
 
@@ -78,6 +79,18 @@ public class HOTPRFCTest {
     OATHSecretState hotpSecretState = new HOTPSecretState(SECRET, OTP_LENGTH, count);
     String generateOtp = oathGenerator.generateOtp(hotpSecretState);
     Assert.assertEquals(expectedOtp, generateOtp);
+  }
+  
+  @Test
+  public void generatesNextOtp() {
+    if (count == 0) {
+      return; // We can't look back if we're at the beginning.
+    }
+    OATHSecretState nextGeneratedState = OATHStateManager.generateNextState(
+            new HOTPSecretState(SECRET, OTP_LENGTH, count-1));
+    OATHGenerator oathGenerator = new HOTPGenerator(macAlgorithm);
+    String generatedOtp = oathGenerator.generateOtp(nextGeneratedState);
+    Assert.assertEquals(expectedOtp, generatedOtp);
   }
           
   

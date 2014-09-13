@@ -26,7 +26,7 @@ public class OATHStateManager {
     return new HOTPSecretState(
             secretState.getSecret(),
             secretState.getLength(),
-            secretState.getCounter() - 1);
+            secretState.getCounter() + 1);
   }
 
   /**
