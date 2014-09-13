@@ -1,6 +1,5 @@
 package org.turner.oath;
 
-import java.security.SecureRandom;
 import org.turner.oath.hotp.HOTPSecretState;
 import org.turner.oath.totp.TOTPSecretState;
 
@@ -20,7 +19,7 @@ public class OATHStateManager {
   public static OATHSecretState generateNextState(
           final HOTPSecretState secretState) {
     assert secretState != null;
-    if (secretState.getCounter() == Long.MAX_VALUE) {
+    if (secretState.getCounter() == Integer.MAX_VALUE) {
       throw new IllegalStateException("Cannot generate a new state from this "
               + "state. Counter size exceeded");
     }

@@ -3,6 +3,7 @@ package org.turner.oath.hotp;
 import javax.crypto.Mac;
 import org.turner.oath.OATHSecretState;
 import org.turner.oath.utils.AbstractOATHGenerator;
+import org.turner.oath.utils.OATHUtils;
 
 /**
  *
@@ -15,10 +16,10 @@ public class HOTPGenerator extends AbstractOATHGenerator {
   }
 
   @Override
-  protected long getInternalState(final OATHSecretState secretState) {
+  protected byte[] getInternalState(final OATHSecretState secretState) {
     assert secretState instanceof HOTPSecretState;
     HOTPSecretState hotpSecretState = (HOTPSecretState) secretState;
-    return hotpSecretState.getCounter();
+    return OATHUtils.longBytes(hotpSecretState.getCounter());
   }
   
 }

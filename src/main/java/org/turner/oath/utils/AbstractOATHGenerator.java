@@ -17,7 +17,7 @@ public abstract class AbstractOATHGenerator implements OATHGenerator {
     this.mac = mac;
   }
   
-  protected abstract long getInternalState(final OATHSecretState secretState);
+  protected abstract byte[] getInternalState(final OATHSecretState secretState);
   
   @Override
   public String generateOtp(final OATHSecretState secretState) {

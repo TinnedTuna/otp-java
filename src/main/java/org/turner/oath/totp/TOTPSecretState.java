@@ -9,26 +9,19 @@ import org.turner.oath.utils.AbstractOATHSecretState;
  */
 public class TOTPSecretState extends AbstractOATHSecretState implements OATHSecretState {
   
-  private final long timeStepSeconds;
-  private final long initialUnixTime;
-  private final long currentUnixTime;
+  private final long timeStepValue;
   
   public TOTPSecretState(
           final byte[] secret, 
           final int length, 
-          final long timeStepSeconds, 
-          final long initialUnixTime, 
-          final long currentUnixTime) {
+          final long timeStepValue) {
     super(secret, length);
-    assert timeStepSeconds > 0;
-    assert initialUnixTime >= 0;
-    this.timeStepSeconds = timeStepSeconds;
-    this.initialUnixTime = initialUnixTime;
-    this.currentUnixTime = currentUnixTime;
+    assert timeStepValue >= 0;
+    this.timeStepValue = timeStepValue;
   }
 
-  public long getCurrentTimeStep() {
-    return (currentUnixTime - initialUnixTime) / timeStepSeconds;
+  public long getTimeStepValue() {
+    return timeStepValue;
   }
   
 }

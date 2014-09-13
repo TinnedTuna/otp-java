@@ -3,6 +3,7 @@ package org.turner.oath.totp;
 import javax.crypto.Mac;
 import org.turner.oath.OATHSecretState;
 import org.turner.oath.utils.AbstractOATHGenerator;
+import org.turner.oath.utils.OATHUtils;
 
 /**
  *
@@ -15,10 +16,10 @@ public class TOTPGenerator extends AbstractOATHGenerator {
   }
 
   @Override
-  protected long getInternalState(final OATHSecretState secretState) {
+  protected byte[] getInternalState(final OATHSecretState secretState) {
     assert secretState instanceof TOTPSecretState;
     TOTPSecretState totpSecretState = (TOTPSecretState) secretState;
-    return totpSecretState.getCurrentTimeStep();
+    return OATHUtils.longBytes(totpSecretState.getTimeStepValue());
   }
   
 }
