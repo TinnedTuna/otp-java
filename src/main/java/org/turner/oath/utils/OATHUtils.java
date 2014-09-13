@@ -15,7 +15,8 @@ public class OATHUtils {
                                             , 10000
                                             , 100000
                                             , 1000000
-                                            , 1000000 
+                                            , 10000000 
+                                            , 100000000
                                             };
   
   public static byte[] truncateBytes(byte[] inputBytes) {
@@ -45,7 +46,7 @@ public class OATHUtils {
     wrappedBytes.order(ByteOrder.BIG_ENDIAN);
     int binary = wrappedBytes.getInt();
     assert binary >= 0;
-    int truncatedOtp = binary % DIGITS_POWER[numberOfOutputDigits - 1];
+    int truncatedOtp = binary % DIGITS_POWER[numberOfOutputDigits];
     assert truncatedOtp >= 0;
     String result = Integer.toString(truncatedOtp);
     assert !result.startsWith("-");
