@@ -50,4 +50,22 @@ public class OPIERandomisedTest {
       Assert.assertEquals(6, split.length);
     }
   }
+  
+  @Test
+  public void foldTo64BitsSHA1() {
+    SHAGenerator shaGenerator = new SHAGenerator();
+    for (byte[] inputBytes : Iterables.toIterable(new FixedLengthByteArrayGenerator(20))) {
+      byte[] foldTo64Bits = shaGenerator.foldTo64Bits(inputBytes);
+      Assert.assertEquals(8, foldTo64Bits.length);
+    }
+  }
+  
+  @Test
+  public void foldTo64BitsMD5() {
+    MD5Generator md5Generator = new MD5Generator();
+    for (byte[] inputBytes : Iterables.toIterable(new FixedLengthByteArrayGenerator(16))) {
+      byte[] foldTo64Bits = md5Generator.foldTo64Bits(inputBytes);
+      Assert.assertEquals(8, foldTo64Bits.length);
+    }
+  }
 }
