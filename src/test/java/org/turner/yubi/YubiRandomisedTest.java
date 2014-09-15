@@ -24,7 +24,7 @@ public class YubiRandomisedTest {
   public void modHexEncoding() {
     for (byte[] inputBytes : Iterables.toIterable(new ByteArrayGenerator())) {
       byte[] modHexToBytes = YubiUtils.modHexToBytes(YubiUtils.bytesToModHex(inputBytes));
-      Assert.assertEquals(inputBytes, modHexToBytes);
+      Assert.assertArrayEquals(inputBytes, modHexToBytes);
     }
   }
   
