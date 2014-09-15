@@ -1,6 +1,8 @@
 package org.turner.yubi.utils;
 
-import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  *
@@ -12,7 +14,19 @@ public class YubiUtils {
                                                , 'f', 'g', 'h', 'i'
                                                , 'j', 'k', 'l', 'n'
                                                , 'r', 't', 'u', 'v' };
+  private static final Map<String, Integer> MOD_HEX_DIGIT_LOCATIONS;
   
+  static {
+    Map<String,Integer> tempMap = new HashMap<>(16);
+    for (int i = 0; i < MOD_HEX_DIGITS.length; i++) {
+      tempMap.put(new String(new char[]{MOD_HEX_DIGITS[i]}), i);
+    }
+    assert tempMap != null;
+    assert tempMap.size() == MOD_HEX_DIGITS.length;
+    MOD_HEX_DIGIT_LOCATIONS = Collections.unmodifiableMap(tempMap);
+    assert MOD_HEX_DIGIT_LOCATIONS != null;
+    assert MOD_HEX_DIGIT_LOCATIONS.size() == MOD_HEX_DIGITS.length;
+  }
 
   public static String bytesToModHex(final byte[] inputBytes) {
     assert inputBytes != null;
@@ -69,11 +83,11 @@ public class YubiUtils {
           final char[] a,
           final char key) {
     assert a != null;
-    for (int i = 0; i<a.length; i++) {
-      if (a[i] == key) {
-        return i;
-      }
-    }
-    return -1;
+    assert MOD_HEX_DIGIT_LOCATIONS != null;
+    Integer get = MOD_HEX_DIGIT_LOCATIONS.get(new String(new char[]{key}));
+    assert get != null;
+    assert get >= 0;
+    assert get < 16;
+    return get;
   }
 }

@@ -7,9 +7,9 @@ package org.turner.yubi;
 public class YubiValidator {
 
   static boolean validateOtp(
-          final String generateOtp, 
+          final String userOtp, 
           final YubiSecretState yubiSecretState) {
-    assert generateOtp != null;
+    assert userOtp != null;
     assert yubiSecretState != null;
     throw new UnsupportedOperationException("Not yet implemented");
   }

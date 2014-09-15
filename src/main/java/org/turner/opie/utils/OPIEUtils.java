@@ -2,6 +2,7 @@ package org.turner.opie.utils;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.Charset;
 import java.util.Arrays;
 
 /**
@@ -17,22 +18,30 @@ public class OPIEUtils {
       // Read the dictionary in from the command line.
       InputStream dictionaryStream = ClassLoader.getSystemResourceAsStream("rfc4226-dictionary.txt");
       byte[] inputBuffer = new byte[9614];
-      dictionaryStream.read(inputBuffer);
-      String entireDictionary = new String(inputBuffer);
+      int result = dictionaryStream.read(inputBuffer);
+      if (result < 0) {
+        throw new IOException("Could not load dictionary, return value was: " + result);
+      }
+      String entireDictionary = new String(inputBuffer, Charset.forName("ASCII"));
       DICTIONARY = entireDictionary.split("\n");
+      assert DICTIONARY != null;
+      assert DICTIONARY.length == 2048;
     } catch (IOException ex) {
       throw new IllegalStateException("Could not load dictionary, IOException.", ex);
     }
   }
   
-  public static String bytesToWords(byte[] input) {
+  public static String bytesToWords(final byte[] input) {
     assert input != null;
-    assert input.length == 8;
+    int bitCount = input.length * 8;
+    int requiredWords = (bitCount/11);
+    assert bitCount >= 0;
+    assert requiredWords >= 0;
     
-    StringBuilder passwordBuilder = new StringBuilder(30);
+    StringBuilder passwordBuilder = new StringBuilder(requiredWords*4);
     // TODO, Parity?
     
-    for (int i = 0; i < 6; i++) {
+    for (int i = 0; i < requiredWords; i++) {
       int bits = extractBitsFromBytes(input, i*11, 11);
       assert DICTIONARY != null;
       assert bits < DICTIONARY.length;
@@ -45,9 +54,9 @@ public class OPIEUtils {
     return passwordBuilder.toString();
   }
   
-  public static byte[] wordsToBytes(String userSuppliedOtp) {
+  public static byte[] wordsToBytes(final String userSuppliedOtp) {
     assert userSuppliedOtp != null;
-    byte[] userSuppliedOtpBytes = new byte[8];
+    byte[] userSuppliedOtpBytes = new byte[9];
     String[] splitOtp = userSuppliedOtp.split(" ");
     
     // TODO, Parity?
@@ -87,26 +96,21 @@ public class OPIEUtils {
           final int numberOfBits
           ) {
     assert input != null;
-    assert input.length > 0;
     assert numberOfBits <= 11;
     assert numberOfBits > 0;
     assert offset >= 0;
-    assert offset + numberOfBits <= 66;
+    assert (offset + numberOfBits) <= input.length*8;
     
-    assert offset / 8 < input.length;
-    assert offset / 8 + 1 < input.length;
-    assert offset / 8 + 2 < input.length;
+    int result = 0;
     
-    byte cl, cc, cr;
-    int result;
+    int leftMostByte = offset / 8;
+    assert leftMostByte >= 0;
+    assert leftMostByte < input.length;
     
-    cl = input[offset / 8]; 
-    cc = input[offset / 8 + 1]; 
-    cr = input[offset / 8 + 2]; 
-    result = ((int)(cl << 8 | cc) << 8 | cr);
-    result = result >> (24 - (numberOfBits + (offset % 8)));
-    result = (result & (0xffff >> (16 - numberOfBits)));
-
+    int rightMostByte = (offset +  numberOfBits)/8;
+    assert leftMostByte >= 0;
+    assert leftMostByte < input.length;
+    
     return result;
   }
   

@@ -46,6 +46,15 @@
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>findbugs-maven-plugin</artifactId>
         <version>2.5.5</version>
+        <configuration>
+          <threshold>low</threshold>
+          <effort>max</effort>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>cobertura-maven-plugin</artifactId>
+        <version>2.6</version>
       </plugin>
     </plugins>
   </reporting>

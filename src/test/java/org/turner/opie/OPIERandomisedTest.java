@@ -24,7 +24,7 @@ public class OPIERandomisedTest {
   
   @Test
   public void bytesToWords() {
-    for (byte[] bytes : Iterables.toIterable(new FixedLengthByteArrayGenerator(8))) {
+    for (byte[] bytes : Iterables.toIterable(new ByteArrayGenerator())) {
       Assert.assertEquals(bytes, 
               OPIEUtils.wordsToBytes(OPIEUtils.bytesToWords(bytes)));
     }
