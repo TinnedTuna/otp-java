@@ -47,11 +47,13 @@ public class OPIEUtils {
       assert bits < DICTIONARY.length;
       assert bits >= 0;
       passwordBuilder.append(DICTIONARY[bits]);
-      if (i<5) {
+      if (i< (requiredWords - 1)) {
         passwordBuilder.append(" ");
       }
     }
-    return passwordBuilder.toString();
+    String password = passwordBuilder.toString();
+    assert password.split(" ").length == requiredWords;
+    return password;
   }
   
   public static byte[] wordsToBytes(final String userSuppliedOtp) {
@@ -74,22 +76,7 @@ public class OPIEUtils {
     }
     return userSuppliedOtpBytes;
   }
-  
-  public static boolean constantTimeEquals(final byte[] left, final byte[] right) {
-    assert left != null;
-    assert right != null;
-    
-    if (left.length != right.length) {
-      return false;
-    }
-    
-    int result = 0;
-    for (int i = 0; i < left.length; i++) {
-      result |= left[i] ^ right[i];
-    }
-    return result == 0;
-  }
-  
+
   private static int extractBitsFromBytes(
           final byte[] input,
           final int offset,
@@ -108,8 +95,28 @@ public class OPIEUtils {
     assert leftMostByte < input.length;
     
     int rightMostByte = (offset +  numberOfBits)/8;
-    assert leftMostByte >= 0;
-    assert leftMostByte < input.length;
+    assert rightMostByte >= 0;
+    assert rightMostByte < input.length;
+    assert rightMostByte > leftMostByte;
+    
+    assert rightMostByte - leftMostByte > 0;
+    assert rightMostByte - leftMostByte <= 2;
+    
+    byte leftByte = input[leftMostByte];
+    byte rightByte = input[rightMostByte];
+    
+    int shift = offset - (offset/8);
+    assert shift >= 0;
+    result |= leftByte & shift;
+    result <<= (11-shift);
+    if ((rightMostByte - leftMostByte) == 1) {
+      // We only "straddle" two bytes.
+      
+    } else {
+      // We "straddle" three bytes.
+      assert leftMostByte + 1 == rightMostByte - 1;
+      byte centreByte = input[leftMostByte + 1];
+    }
     
     return result;
   }
@@ -120,9 +127,9 @@ public class OPIEUtils {
           final int offset,
           final int bitLength) {
     assert bytes != null;
-    assert offset > 0;
+    assert offset >= 0;
     assert bitLength > 0;
-    assert offset + bitLength <= bytes.length;
+    assert (offset + bitLength) <= (bytes.length * 8);
 
     int shift;
     int y;
@@ -180,5 +187,20 @@ public class OPIEUtils {
     assert DICTIONARY.length > 0;
     assert DICTIONARY.length <= 2048;
     return Arrays.binarySearch(DICTIONARY, 0, 570, shortWord);
+  }
+    
+  public static boolean constantTimeEquals(final byte[] left, final byte[] right) {
+    assert left != null;
+    assert right != null;
+    
+    if (left.length != right.length) {
+      return false;
+    }
+    
+    int result = 0;
+    for (int i = 0; i < left.length; i++) {
+      result |= left[i] ^ right[i];
+    }
+    return result == 0;
   }
 }

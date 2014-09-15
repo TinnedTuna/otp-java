@@ -8,6 +8,7 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
+import org.turner.oath.TestUtils;
 import org.turner.opie.md5.MD5Generator;
 import org.turner.opie.sha.SHAGenerator;
 import org.turner.opie.utils.OPIEUtils;
@@ -25,8 +26,10 @@ public class OPIERandomisedTest {
   @Test
   public void bytesToWords() {
     for (byte[] bytes : Iterables.toIterable(new ByteArrayGenerator())) {
-      Assert.assertEquals(bytes, 
-              OPIEUtils.wordsToBytes(OPIEUtils.bytesToWords(bytes)));
+      Assert.assertTrue(
+              obviousEquals(
+                bytes,
+                OPIEUtils.wordsToBytes(OPIEUtils.bytesToWords(bytes))));
     }
   }
   
