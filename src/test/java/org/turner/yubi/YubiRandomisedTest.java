@@ -7,6 +7,7 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
+import org.turner.otp.generators.YubiStateGenerator;
 import org.turner.yubi.utils.YubiUtils;
 
 /**
@@ -16,6 +17,8 @@ import org.turner.yubi.utils.YubiUtils;
 @RunWith(JUnit4.class)
 public class YubiRandomisedTest {
   
+  final SecureRandom secureRandom = new SecureRandom();
+
   /**
    * Test that encoding then decoding a byte[] with modHex doesn't affect the
    * contents.
@@ -30,8 +33,7 @@ public class YubiRandomisedTest {
   
   @Test
   public void yubiKeyOtpSize() {
-    for (byte[] inputBytes : Iterables.toIterable(new ByteArrayGenerator())) {
-      YubiSecretState yubiSecretState = new YubiSecretState();
+    for (YubiSecretState yubiSecretState : Iterables.toIterable(new YubiStateGenerator())) {
       String generateOtp = YubiGenerator.generateOtp(yubiSecretState);
       Assert.assertEquals(32, generateOtp.length());
     }
@@ -39,8 +41,7 @@ public class YubiRandomisedTest {
   
   @Test
   public void yubiKeyModHexOutput() {
-    for (byte[] inputBytes : Iterables.toIterable(new ByteArrayGenerator())) {
-      YubiSecretState yubiSecretState = new YubiSecretState();
+    for (YubiSecretState yubiSecretState : Iterables.toIterable(new YubiStateGenerator())) {
       String generateOtp = YubiGenerator.generateOtp(yubiSecretState);
       Assert.assertTrue(YubiUtils.isModHex(generateOtp));
     }
@@ -48,10 +49,7 @@ public class YubiRandomisedTest {
   
   @Test
   public void generatedOtpsValidate() {
-    SecureRandom secureRandom = new SecureRandom();
-    for (byte[] inputBytes : Iterables.toIterable(new ByteArrayGenerator())) {
-      secureRandom.setSeed(inputBytes);
-      YubiSecretState yubiSecretState = YubiStateManager.generateNewState(secureRandom);
+    for (YubiSecretState yubiSecretState : Iterables.toIterable(new YubiStateGenerator())) {
       String generateOtp = YubiGenerator.generateOtp(yubiSecretState);
       Assert.assertTrue(YubiValidator.validateOtp(generateOtp, yubiSecretState));
     }

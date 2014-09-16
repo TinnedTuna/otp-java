@@ -42,7 +42,7 @@ public class OPIEUtils {
     // TODO, Parity?
     
     for (int i = 0; i < requiredWords; i++) {
-      int bits = extractBitsFromBytes(input, i*11, 11);
+      int bits = extract11BitsFromBytes(input, i*11);
       assert DICTIONARY != null;
       assert bits < DICTIONARY.length;
       assert bits >= 0;
@@ -71,20 +71,17 @@ public class OPIEUtils {
       assert findWordLocation >= 0;
       assert findWordLocation < 2048;
       
-      insertBitsIntoBytes(userSuppliedOtpBytes, findWordLocation, i*11, 11);
+      insert11BitsIntoBytes(userSuppliedOtpBytes, findWordLocation, i*11);
       i += 1;
     }
     return userSuppliedOtpBytes;
   }
 
-  private static int extractBitsFromBytes(
+  private static int extract11BitsFromBytes(
           final byte[] input,
-          final int offset,
-          final int numberOfBits
-          ) {
+          final int offset) {
     assert input != null;
-    assert numberOfBits <= 11;
-    assert numberOfBits > 0;
+    int numberOfBits = 11;
     assert offset >= 0;
     assert (offset + numberOfBits) <= input.length*8;
     
@@ -121,14 +118,13 @@ public class OPIEUtils {
     return result;
   }
   
-  private static void insertBitsIntoBytes(
+  private static void insert11BitsIntoBytes(
           final byte[] bytes,
           final int bitsToInsert,
-          final int offset,
-          final int bitLength) {
+          final int offset) {
     assert bytes != null;
     assert offset >= 0;
-    assert bitLength > 0;
+    int bitLength = 11;
     assert (offset + bitLength) <= (bytes.length * 8);
 
     int shift;
