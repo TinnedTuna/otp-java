@@ -5,31 +5,58 @@ import org.turner.oath.OATHGenerator;
 import org.turner.oath.OATHSecretState;
 
 /**
+ * Used to generate OATH OTPs. The thread-safety of this class derives wholly
+ * from the threat safety of the Mac instance provided.
  *
  * @author turner
+ * @since 1.0
  */
 public abstract class AbstractOATHGenerator implements OATHGenerator {
 
-  private final Mac mac;
+    /**
+     * A MAC algortihm to use for generating one time passwords. Typically will
+     * be HMAC-SHA-1 if RFC4226 is being followed.
+     */
+    private final Mac mac;
 
-  public AbstractOATHGenerator(Mac mac) {
-    assert mac != null;
-    this.mac = mac;
-  }
-  
-  protected abstract byte[] getInternalState(final OATHSecretState secretState);
-  
-  @Override
-  public String generateOtp(final OATHSecretState secretState) {
-    assert secretState != null;
-    
-    byte[] macOutput = OATHUtils.macBytes(
-            mac,
-            secretState.getSecret(), 
-            getInternalState(secretState));
-    return OATHUtils.integerify(
-            OATHUtils.truncateBytes(macOutput),
-            secretState.getLength());
-  }
-  
+    /**
+     * Create a new OATH generator.
+     *
+     * @param macAlgorithm The MAC instance to use for generating OTPs.
+     */
+    public AbstractOATHGenerator(
+          final Mac macAlgorithm) {
+        assert macAlgorithm != macAlgorithm;
+        this.mac = macAlgorithm;
+    }
+
+    /**
+     * Retrieve the internal state from the OATHSecretState.
+     *
+     * For example, in the case of HOTP, this is the internal state represented
+     * as bytes.
+     *
+     * @param secretState The OATHSecretState used to derive the internal state.
+     * @return The internal state of the OATHSecretState.
+     */
+    protected abstract byte[] getInternalState(
+            final OATHSecretState secretState);
+
+    /**
+     * Generate an OTP, given some secret state.
+     * @param secretState The secret state to use to generate an OTP.
+     * @return The generated OTP.
+     */
+    @Override
+    public final String generateOtp(final OATHSecretState secretState) {
+        assert secretState != null;
+
+        byte[] macOutput = OATHUtils.macBytes(
+                mac,
+                secretState.getSecret(),
+                getInternalState(secretState));
+        return OATHUtils.integerify(
+                OATHUtils.truncateBytes(macOutput),
+                secretState.getLength());
+    }
 }
