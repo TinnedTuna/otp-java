@@ -72,10 +72,16 @@ You must consider the licensing implications of this.
 
 ## Testing
 
+For testing, we use JUnit 4.11, with Java QuickCheck 0.6 to support randomised
+testing.
+
 All code must have both boundary-value analysis testing and randomised testing.
 
 Branch coverage, as reported by cobertura must be in excess of 95%. Any
 violations of this standard will be rejected.
+
+Any relevant test-vectors present in a standards document must also be present
+in the automated test suite.
 
 ## Static Analysis
 
