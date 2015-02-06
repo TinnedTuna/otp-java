@@ -5,17 +5,9 @@ RFC 6238 and RFC 4226.
 
 # Stability
 
-This software is very alpha -- there's not even a test rig yet!
+This software is very alpha.
 
-# Building
-
-There's currently an ant script:
-
-```
-ant dist
-```
-
-Will get you a jar
+The build is broken, because OPIE OTPs are currently broken. 
 
 # Usage
 
