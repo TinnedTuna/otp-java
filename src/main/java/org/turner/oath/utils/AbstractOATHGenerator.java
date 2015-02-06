@@ -8,13 +8,16 @@ import org.turner.oath.OATHSecretState;
  * Used to generate OATH OTPs. The thread-safety of this class derives wholly
  * from the threat safety of the Mac instance provided.
  *
+ * @param <T> the type of OATHSecretState which this generator is expected to
+ *            work with.
  * @author turner
  * @since 1.0
  */
-public abstract class AbstractOATHGenerator implements OATHGenerator {
+public abstract class AbstractOATHGenerator<T extends OATHSecretState>
+        implements OATHGenerator<T> {
 
     /**
-     * A MAC algortihm to use for generating one time passwords. Typically will
+     * A MAC algorithm to use for generating one time passwords. Typically will
      * be HMAC-SHA-1 if RFC4226 is being followed.
      */
     private final Mac mac;
@@ -40,7 +43,7 @@ public abstract class AbstractOATHGenerator implements OATHGenerator {
      * @return The internal state of the OATHSecretState.
      */
     protected abstract byte[] getInternalState(
-            final OATHSecretState secretState);
+            final T secretState);
 
     /**
      * Generate an OTP, given some secret state.
@@ -48,7 +51,7 @@ public abstract class AbstractOATHGenerator implements OATHGenerator {
      * @return The generated OTP.
      */
     @Override
-    public final String generateOtp(final OATHSecretState secretState) {
+    public final String generateOtp(final T secretState) {
         assert secretState != null;
 
         byte[] macOutput = OATHUtils.macBytes(
