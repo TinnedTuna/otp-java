@@ -3,28 +3,33 @@ package org.turner.opie.md5;
 import org.turner.opie.utils.AbstractOPIEGenerator;
 
 /**
+ * The MD5 generator for OPIE OTPs.
  *
  * @author turner
+ * @since 1.0
  */
 public class MD5Generator extends AbstractOPIEGenerator {
 
+  /**
+   * The expected digest length of MD5, in bytes.
+   */
+  private static final int MD5_OUTPUT_LENGTH = 16;
+
+  /**
+   * Take the output of the MD5 algorithm, and fold it down to 64 bits.
+   *
+   * @param input The input byte array, of length 16 bytes.
+   * @return The folded byte array, of length 8 bytes.
+   */
   @Override
-  public byte[] foldTo64Bits(final byte[] input) {
+  public final byte[] foldTo64Bits(final byte[] input) {
     assert input != null;
-    assert input.length == 16;
-    
-    byte[] results = new byte[8];
-    results[0] = (byte) (input[0] ^ input[8]);
-    results[1] = (byte) (input[1] ^ input[9]);
-    results[2] = (byte) (input[2] ^ input[10]);
-    results[3] = (byte) (input[3] ^ input[11]);
-    
-    results[4] = (byte) (input[4] ^ input[12]);
-    results[5] = (byte) (input[5] ^ input[13]);
-    results[6] = (byte) (input[6] ^ input[14]);
-    results[7] = (byte) (input[7] ^ input[15]);
-    
+    assert input.length == MD5_OUTPUT_LENGTH;
+
+    byte[] results = new byte[OUTPUT_BYTES_COUNT];
+    for (int i = 0; i < OUTPUT_BYTES_COUNT; i++) {
+      results[i] = (byte) (input[i] ^ input[i + OUTPUT_BYTES_COUNT]);
+    }
     return results;
   }
-  
 }

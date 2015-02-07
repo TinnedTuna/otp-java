@@ -8,6 +8,9 @@ import javax.crypto.spec.SecretKeySpec;
 
 /**
  * Utility class to provide common functions used when working with OATH OTPs.
+ *
+ * @author turner
+ * @since 1.0
  */
 public final class OATHUtils {
 

@@ -16,5 +16,4 @@ public interface OATHGenerator<T extends OATHSecretState> {
    * @return The one-time password,
    */
   String generateOtp(T secretState);
-  
 }
