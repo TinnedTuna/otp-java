@@ -121,7 +121,7 @@ public final class OPIEUtils {
    */
   public static byte[] wordsToBytes(final String userSuppliedOtp) {
     assert userSuppliedOtp != null;
-    byte[] userSuppliedOtpBytes = new byte[9];
+    byte[] userSuppliedOtpBytes = new byte[Byte.SIZE + 1];
     String[] splitOtp = userSuppliedOtp.split(" ");
 
     // TODO, Parity?
@@ -181,7 +181,7 @@ public final class OPIEUtils {
     result <<= (ENTROPY_PER_WORD - shift);
     if ((rightMostByte - leftMostByte) == 1) {
       // We only "straddle" two bytes.
-
+      assert true;
     } else {
       // We "straddle" three bytes.
       assert leftMostByte + 1 == rightMostByte - 1;
@@ -214,10 +214,10 @@ public final class OPIEUtils {
 
     shift = ((Byte.SIZE - ((offset + bitLength) % Byte.SIZE)) % Byte.SIZE);
     y = bitsToInsert << shift;
-    cl = (byte) ((y >> 16) & ALL_BITS_SET);
+    cl = (byte) ((y >> Byte.SIZE * 2) & ALL_BITS_SET);
     cc = (byte) ((y >> Byte.SIZE) & ALL_BITS_SET);
     cr = (byte) (y & ALL_BITS_SET);
-    if (shift + bitLength > 16) {
+    if (shift + bitLength > Byte.SIZE * 2) {
       bytes[offset / Byte.SIZE] |= cl;
       bytes[offset / Byte.SIZE + 1] |= cc;
       bytes[offset / Byte.SIZE + 2] |= cr;
