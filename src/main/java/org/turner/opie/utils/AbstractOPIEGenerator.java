@@ -29,8 +29,7 @@ public abstract class AbstractOPIEGenerator implements OPIEGenerator {
     MessageDigest messageDigest = opieSecretState.getMessageDigest();
     messageDigest.update(opieSecretState.getSeed());
     byte[] digested = messageDigest.digest(opieSecretState.getSecret());
-    
-    byte[] nextSecret = foldTo64Bits(digested);
-    return nextSecret;
+
+    return foldTo64Bits(digested);
   }
 }
