@@ -24,7 +24,6 @@ public class OPIEUtils {
       }
       String entireDictionary = new String(inputBuffer, Charset.forName("ASCII"));
       DICTIONARY = entireDictionary.split("\n");
-      assert DICTIONARY != null;
       assert DICTIONARY.length == 2048;
     } catch (IOException ex) {
       throw new IllegalStateException("Could not load dictionary, IOException.", ex);
