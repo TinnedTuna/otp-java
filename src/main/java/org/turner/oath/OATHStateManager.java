@@ -19,14 +19,14 @@ public class OATHStateManager {
   public static OATHSecretState generateNextState(
           final HOTPSecretState secretState) {
     assert secretState != null;
-    if (secretState.getCounter() == Integer.MAX_VALUE) {
+    if (secretState.getOtpsGenerated() == Integer.MAX_VALUE) {
       throw new IllegalStateException("Cannot generate a new state from this "
               + "state. Counter size exceeded");
     }
     return new HOTPSecretState(
             secretState.getSecret(),
             secretState.getLength(),
-            secretState.getCounter() + 1);
+            secretState.getOtpsGenerated() + 1);
   }
 
   /**

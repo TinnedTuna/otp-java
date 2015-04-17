@@ -19,7 +19,7 @@ public class HOTPGenerator extends AbstractOATHGenerator {
   protected byte[] getInternalState(final OATHSecretState secretState) {
     assert secretState instanceof HOTPSecretState;
     HOTPSecretState hotpSecretState = (HOTPSecretState) secretState;
-    return OATHUtils.longBytes(hotpSecretState.getCounter());
+    return OATHUtils.longBytes(hotpSecretState.getOtpsGenerated());
   }
   
 }
