@@ -1,5 +1,5 @@
 /**
- * Algorithms specific to generating otp-md4 OPIE one-time passwords.
+ * Algorithms specific to generating otp-md5 OPIE one-time passwords.
  *
  * @author dst502
  * @since 1.0
