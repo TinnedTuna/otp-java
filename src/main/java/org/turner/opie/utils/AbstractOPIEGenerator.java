@@ -14,6 +14,9 @@ import org.turner.opie.OPIESecretState;
  */
 public abstract class AbstractOPIEGenerator implements OPIEGenerator {
 
+  /** The expected number of output bytes. */
+  protected static final int EXPECTED_OUTPUT_LENGTH_BYTES = 8;
+
   /**
    * Takes an input stream of bytes, >64b length and folds it down to 64 bits.
    *
@@ -38,6 +41,9 @@ public abstract class AbstractOPIEGenerator implements OPIEGenerator {
     messageDigest.update(opieSecretState.getSeed());
     byte[] digested = messageDigest.digest(opieSecretState.getSecret());
 
-    return foldTo64Bits(digested);
+    byte[] foldedBits = foldTo64Bits(digested);
+    assert foldedBits != null;
+    assert foldedBits.length == EXPECTED_OUTPUT_LENGTH_BYTES;
+    return foldedBits;
   }
 }
