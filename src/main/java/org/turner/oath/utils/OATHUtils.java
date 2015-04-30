@@ -63,7 +63,6 @@ public final class OATHUtils {
         int offsetLocation
                 = inputBytes[inputBytes.length - 1] & LOWER_4_BITS_SET;
 
-        assert offsetLocation >= 0;
         assert offsetLocation + DYNAMIC_TRUNCATION_OUTPUT_LENGTH
                 <= inputBytes.length;
 

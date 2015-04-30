@@ -2,6 +2,8 @@ package org.turner.oath.utils;
 
 import org.turner.oath.OATHSecretState;
 
+import java.util.Arrays;
+
 /**
  * State which is common to both TOTP and HOTP.
  *
@@ -27,13 +29,13 @@ public class AbstractOATHSecretState implements OATHSecretState {
             final int outputLength) {
         assert secretBytes != null;
         assert outputLength > 0;
-        this.secret = secretBytes;
+        this.secret = Arrays.copyOf(secretBytes, secretBytes.length);
         this.length = outputLength;
     }
 
     @Override
     public final byte[] getSecret() {
-        return secret;
+        return Arrays.copyOf(secret, secret.length);
     }
 
     @Override

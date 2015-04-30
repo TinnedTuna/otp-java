@@ -43,7 +43,7 @@ public class OPIERandomisedTest {
       Assert.assertEquals(6, split.length);
     }
   }
-    
+
   @Test
   public void sizeOfMD5OTP() throws NoSuchAlgorithmException {
     OPIEGenerator opieGenerator = new MD5Generator();

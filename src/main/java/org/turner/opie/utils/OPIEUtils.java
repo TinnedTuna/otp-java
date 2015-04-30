@@ -164,8 +164,6 @@ public final class OPIEUtils {
    */
   private static int findWordLocation(final String word) {
     assert word != null;
-    assert word.length() <= MAX_WORD_SIZE;
-    assert word.length() > 0;
     assert DICTIONARY != null;
     assert DICTIONARY.length > 0;
     assert DICTIONARY.length <= DICTIONARY_SIZE;
@@ -173,7 +171,7 @@ public final class OPIEUtils {
 
     if (word.length() == MAX_WORD_SIZE) {
       return findLongWordLocation(word);
-    } else if (word.length() < MAX_WORD_SIZE) {
+    } else if (word.length() < MAX_WORD_SIZE && word.length() > 0) {
       return findShortWordLocation(word);
     } else {
       throw new IllegalStateException("Word " + word + " had illegal length.");

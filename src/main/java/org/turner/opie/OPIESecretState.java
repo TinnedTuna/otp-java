@@ -1,6 +1,7 @@
 package org.turner.opie;
 
 import java.security.MessageDigest;
+import java.util.Arrays;
 
 /**
  * Holds secret state required for OPIE one-time passwords.
@@ -43,8 +44,8 @@ public class OPIESecretState {
     assert uniqueSeed != null;
     assert otpsToGenerate > 0;
     assert hashAlgorithm != null;
-    this.secret = randomBytes;
-    this.seed = uniqueSeed;
+    this.secret = Arrays.copyOf(randomBytes, randomBytes.length);
+    this.seed = Arrays.copyOf(uniqueSeed, uniqueSeed.length);
     this.hashCounts = otpsToGenerate;
     this.messageDigest = hashAlgorithm;
   }
@@ -64,7 +65,7 @@ public class OPIESecretState {
    * @return The secret used to generate OTPs.
    */
   public final byte[] getSecret() {
-    return secret;
+    return Arrays.copyOf(secret, secret.length);
   }
 
   /**
@@ -74,7 +75,7 @@ public class OPIESecretState {
    * @return The seed.
    */
   public final byte[] getSeed() {
-    return seed;
+    return Arrays.copyOf(seed, seed.length);
   }
 
   /**
