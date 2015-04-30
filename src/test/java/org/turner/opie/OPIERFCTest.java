@@ -7,6 +7,7 @@ import org.junit.runners.Parameterized;
 import org.turner.opie.md5.MD5Generator;
 import org.turner.opie.sha.SHAGenerator;
 import org.turner.opie.utils.HexEncoder;
+import org.turner.opie.utils.WordEncoder;
 
 import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
@@ -57,16 +58,22 @@ public class OPIERFCTest {
     }
     this.opieSecretState = new OPIESecretState(
         password.getBytes("ASCII"),
-        seed.getBytes("ASCII"),
+        seed.toLowerCase().getBytes("ASCII"),
         count,
         messageDigest);
   }
 
   @Test
-  public void rfcTest() {
+  public void rfcTestHexEncoded() {
     byte[] otpBytes = opieGenerator.generateOPIEBytes(opieSecretState);
     String otpHex = HexEncoder.encode(otpBytes);
     Assert.assertEquals(expectedHexOutput, otpHex.toUpperCase());
+  }
 
+  @Test
+  public void rfcTestWordEncded() {
+    byte[] otpBytes = opieGenerator.generateOPIEBytes(opieSecretState);
+    String otpWords = WordEncoder.encode(otpBytes);
+    Assert.assertEquals(expectedPasswordOutput, otpWords.toUpperCase());
   }
 }
