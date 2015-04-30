@@ -1,6 +1,7 @@
 package org.turner.opie;
 
 import org.turner.opie.utils.OPIEUtils;
+import org.turner.opie.utils.WordEncoder;
 
 /**
  * A simple static validator for working out if provided OPIE one-time
@@ -35,6 +36,6 @@ public final class OPIEValidator {
     byte[] generatedOPIE = opieGenerator.generateOPIEBytes(secretState);
     return OPIEUtils.constantTimeEquals(
         generatedOPIE,
-        OPIEUtils.wordsToBytes(userSuppliedOPIE));
+        WordEncoder.decode(userSuppliedOPIE));
   }
 }

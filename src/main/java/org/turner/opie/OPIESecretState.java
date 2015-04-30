@@ -42,7 +42,7 @@ public class OPIESecretState {
       final MessageDigest hashAlgorithm) {
     assert randomBytes != null;
     assert uniqueSeed != null;
-    assert otpsToGenerate > 0;
+    assert otpsToGenerate >= 0;
     assert hashAlgorithm != null;
     this.secret = Arrays.copyOf(randomBytes, randomBytes.length);
     this.seed = Arrays.copyOf(uniqueSeed, uniqueSeed.length);

@@ -26,20 +26,17 @@ public abstract class AbstractOPIEGenerator implements OPIEGenerator {
   public abstract byte[] foldTo64Bits(byte[] input);
 
   @Override
-  public final String generateOPIEString(
-      final OPIESecretState opieSecretState) {
-    assert opieSecretState != null;
-    return OPIEUtils.bytesToWords(generateOPIEBytes(opieSecretState));
-  }
-
-  @Override
   public final byte[] generateOPIEBytes(
       final OPIESecretState opieSecretState) {
     assert opieSecretState != null;
 
     MessageDigest messageDigest = opieSecretState.getMessageDigest();
-    messageDigest.update(opieSecretState.getSeed());
-    byte[] digested = messageDigest.digest(opieSecretState.getSecret());
+    messageDigest.update(opieSecretState.getSecret());
+    byte[] digested = messageDigest.digest(opieSecretState.getSeed());
+    for (long i = 0; i < opieSecretState.getHashCounts(); i++) {
+      digested = messageDigest.digest(digested);
+    }
+
 
     byte[] foldedBits = foldTo64Bits(digested);
     assert foldedBits != null;

@@ -9,14 +9,6 @@ package org.turner.opie;
 public interface OPIEGenerator {
 
   /**
-   * Generate an OPIE OTP as a string, given the secret state.
-   *
-   * @param opieSecretState The secret state of this OPIE OTP.
-   * @return The OTP.
-   */
-  String generateOPIEString(OPIESecretState opieSecretState);
-
-  /**
    * Generate an OPIE OTP as an array of bytes, given the secret state.
    *
    * @param opieSecretState The secret state of this OPIE OTP.
