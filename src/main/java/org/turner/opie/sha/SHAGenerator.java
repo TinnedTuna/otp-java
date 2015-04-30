@@ -13,29 +13,32 @@ public class SHAGenerator extends AbstractOPIEGenerator {
   /** The expected input size to foldTo64Bits. */
   private static final int SHA1_OUTPUT_SIZE_BYTES = 20;
 
+  /** A short stride on the input byte array. */
+  private static final int SHORT_STRIDE = 4;
+
+  /** A long stride on the input byte array. */
+  private static final int LONG_STRIDE = 8;
+
+
   @Override
   public final byte[] foldTo64Bits(final byte[] input) {
     assert input != null;
     assert input.length == SHA1_OUTPUT_SIZE_BYTES;
     byte[] result = new byte[EXPECTED_OUTPUT_LENGTH_BYTES];
-    
-    result[0] = (byte) (input[0]  ^ input[4]);
-    result[1] = (byte) (input[1]  ^ input[5]);
-    result[2] = (byte) (input[2]  ^ input[6]);
-    result[3] = (byte) (input[3]  ^ input[7]);
-    
-    result[4] = (byte) (input[12]  ^ input[4]);
-    result[5] = (byte) (input[13]  ^ input[5]);
-    result[6] = (byte) (input[14]  ^ input[6]);
-    result[7] = (byte) (input[15]  ^ input[7]);
-    
-    result[0] ^= input[16];
-    result[1] ^= input[17];
-    result[2] ^= input[18];
-    result[3] ^= input[19];
-    
+
+    // First, we perform the simultaneous long and short stride.
+    for (int i = 0; i < EXPECTED_OUTPUT_LENGTH_BYTES / 2; i++) {
+      result[i] = (byte) (input[i] ^ input[SHORT_STRIDE] ^ input[LONG_STRIDE]);
+    }
+
+    // Next, we perform the lone long stride.
+    for (
+        int i = EXPECTED_OUTPUT_LENGTH_BYTES / 2;
+        i < EXPECTED_OUTPUT_LENGTH_BYTES;
+        i++) {
+      result[i] = (byte) (input[i] ^ input[LONG_STRIDE]);
+    }
+
     return result;
   }
-
-  
 }
