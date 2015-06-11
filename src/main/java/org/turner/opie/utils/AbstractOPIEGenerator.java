@@ -30,17 +30,43 @@ public abstract class AbstractOPIEGenerator implements OPIEGenerator {
       final OPIESecretState opieSecretState) {
     assert opieSecretState != null;
 
-    MessageDigest messageDigest = opieSecretState.getMessageDigest();
-    messageDigest.update(opieSecretState.getSeed());
-    byte[] digested = messageDigest.digest(opieSecretState.getSecret());
-    for (long i = 0; i < opieSecretState.getHashCounts(); i++) {
-      digested = messageDigest.digest(digested);
+    byte[] digested = initialStep(
+            opieSecretState.getSeed(),
+            opieSecretState.getSecret(),
+            opieSecretState.getMessageDigest());
+
+    if (opieSecretState.getHashCounts() == 0L) {
+      return digested;
     }
 
+    for (long i = 0; i < opieSecretState.getHashCounts(); i++) {
+      digested = opieSecretState.getMessageDigest().digest(digested);
+    }
 
     byte[] foldedBits = foldTo64Bits(digested);
     assert foldedBits != null;
     assert foldedBits.length == EXPECTED_OUTPUT_LENGTH_BYTES;
     return foldedBits;
+  }
+
+  /**
+   * Perform the initial step of an OPIE OTP. Concatenates the seed and the
+   * secret, then digests and folds it.
+   *
+   * @param seed The OPIE seed.
+   * @param secret The user's secret.
+   * @param messageDigest The messageDigest algorithm to use.
+   * @return The result of the RFC2289 initial step.
+   */
+  private byte[] initialStep(
+          final byte[] seed,
+          final byte[] secret,
+          final MessageDigest messageDigest) {
+    messageDigest.update(seed);
+    final byte[] result = foldTo64Bits(messageDigest.digest(secret));
+    messageDigest.reset();
+    assert result != null;
+    assert result.length == EXPECTED_OUTPUT_LENGTH_BYTES;
+    return result;
   }
 }

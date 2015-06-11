@@ -34,7 +34,10 @@ public class OPIERFCTest {
         // Algo, passphrase, seed, count, expected hex output, expected OTP.
         {"MD5", "This is a test.", "TeSt", 0, "9E876134D90499DD", "INCH SEA ANNE LONG AHEM TOUR"},
         {"MD5", "This is a test.", "TeSt", 1, "7965E05436F5029F", "EASE OIL FUM CURE AWRY AVIS"},
-        {"MD5", "This is a test.", "TeSt", 99, "50FE1962C4965880", "BAIL TUFT BITS GANG CHEF THY"}
+        {"MD5", "This is a test.", "TeSt", 99, "50FE1962C4965880", "BAIL TUFT BITS GANG CHEF THY"},
+        {"MD5", "AbCdEfGhIjK", "alpha1", 0 ,"87066DD9644BF206", "FULL PEW DOWN ONCE MORT ARC"},
+        {"MD5", "AbCdEfGhIjK", "alpha1", 1, "7CD34C1040ADD14B", "FACT HOOF AT FIST SITE KENT"},
+        {"MD5", "AbCdEfGhIjK", "alpha1", 99, "5AA37A81F212146C", "BODE HOP JAKE STOW JUT RAP"}
     });
   }
 

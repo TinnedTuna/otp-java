@@ -19,7 +19,9 @@ public class MD5Generator extends AbstractOPIEGenerator {
   @Override
   public final byte[] foldTo64Bits(final byte[] input) {
     assert input != null;
-    assert input.length == MD5_OUTPUT_LENGTH_BYTES;
+    assert input.length == MD5_OUTPUT_LENGTH_BYTES
+            : "Expected nput of length " + MD5_OUTPUT_LENGTH_BYTES
+            + ", received input of length " + input.length;
 
     byte[] results = new byte[EXPECTED_OUTPUT_LENGTH_BYTES];
     for (int i = 0; i < EXPECTED_OUTPUT_LENGTH_BYTES; i++) {
