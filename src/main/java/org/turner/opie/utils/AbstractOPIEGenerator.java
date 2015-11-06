@@ -40,13 +40,13 @@ public abstract class AbstractOPIEGenerator implements OPIEGenerator {
     }
 
     for (long i = 0; i < opieSecretState.getHashCounts(); i++) {
-      digested = opieSecretState.getMessageDigest().digest(digested);
+      digested
+          = foldTo64Bits(opieSecretState.getMessageDigest().digest(digested));
+      opieSecretState.getMessageDigest().reset();
     }
 
-    byte[] foldedBits = foldTo64Bits(digested);
-    assert foldedBits != null;
-    assert foldedBits.length == EXPECTED_OUTPUT_LENGTH_BYTES;
-    return foldedBits;
+    assert digested.length == EXPECTED_OUTPUT_LENGTH_BYTES;
+    return digested;
   }
 
   /**

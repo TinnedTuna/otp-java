@@ -26,9 +26,6 @@ public final class HexEncoder {
   private static final Pattern HEX_DIGIT_PATTERN
           = Pattern.compile("\\p{XDigit}*");
 
-  /** The radix used for decoding. */
-  private static final int DECODE_RADIX = 16;
-
   /**
    * Private constructor, never called.
    */
@@ -65,7 +62,6 @@ public final class HexEncoder {
     assert hexString.length() % 2 == 0;
     assert HEX_DIGIT_PATTERN.matcher(hexString).matches();
     final byte[] result = new byte[hexString.length() / 2];
-    final char[] hexStringChars = hexString.toCharArray();
     for (int i = 0; i < hexString.length() - 1; i += 2) {
       int resultIndex = i / 2;
       result[resultIndex] = findHexit(hexString.charAt(i));

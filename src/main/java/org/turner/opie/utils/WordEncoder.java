@@ -139,8 +139,54 @@ public final class WordEncoder {
   private static int extract11BitsFromBytes(
       final byte[] input,
       final int offset) {
-    assert false;
-    return 1;
+    assert input != null;
+    assert offset >= 0;
+
+    // First byte, integer rounding gives floor semantics.
+    int startByte = offset / BITS_PER_BYTE;
+
+    // Last byte, floor semantics
+    int lastBit = offset + BITS_PER_DICTIONARY_WORD;
+    int lastByteIdx = (lastBit / BITS_PER_BYTE) + 1;
+    assert lastByteIdx < input.length;
+    assert lastByteIdx > 0;
+
+    int result;
+    if (lastByteIdx - startByte == 2) {
+      // The number of bits in the first byte.
+      int unwantedBitsInFirstByte = startByte * BITS_PER_BYTE;
+      int desiredFirstByteBits
+          = BITS_PER_BYTE - offset - unwantedBitsInFirstByte;
+      assert desiredFirstByteBits <= BITS_PER_BYTE;
+      assert desiredFirstByteBits > 0;
+
+      // Get rid of the unwanted bits.
+      result = input[startByte] << unwantedBitsInFirstByte;
+
+      // Add in desired bits from the first byte.
+      result >>= unwantedBitsInFirstByte;
+      result <<= desiredFirstByteBits;
+
+      // Get the bits out of the second byte.
+      int bitsInSecondByte = desiredFirstByteBits - BITS_PER_DICTIONARY_WORD;
+      assert bitsInSecondByte <= BITS_PER_BYTE;
+      int unwantedBitsInSecondByte = BITS_PER_BYTE - bitsInSecondByte;
+      result |= input[lastByteIdx] >> unwantedBitsInSecondByte;
+    } else {
+      int bitsInRightMostByte = lastBit - ((lastByteIdx - 1) * BITS_PER_BYTE);
+      int shiftAmount = BITS_PER_BYTE - bitsInRightMostByte;
+      assert shiftAmount > 0;
+      assert shiftAmount < BITS_PER_BYTE;
+      final byte lastByte = input[lastByteIdx];
+      // Pack into the result int.
+      result = 1;
+      result |= input[lastByte - 1];
+      result <<= BITS_PER_BYTE;
+      result |= (lastByte >> shiftAmount);
+      assert result < DICTIONARY_SIZE;
+    }
+
+    return result;
   }
 
   /**

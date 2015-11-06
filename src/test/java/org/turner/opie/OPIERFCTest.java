@@ -74,7 +74,7 @@ public class OPIERFCTest {
   }
 
   @Test
-  public void rfcTestWordEncded() {
+  public void rfcTestWordEncoded() {
     byte[] otpBytes = opieGenerator.generateOPIEBytes(opieSecretState);
     String otpWords = WordEncoder.encode(otpBytes);
     Assert.assertEquals(expectedPasswordOutput, otpWords.toUpperCase());
