@@ -39,3 +39,10 @@ OPIE Passwords are very similar as above.
 ## What We Don't Do
 
 We do not provide randomness! Use SecureRandom for that.
+
+# Contributing
+
+Please note that this project is released with a Contributor Code of Conduct.
+By participating in this project you agree to abide by its terms.
+
+The particular code of conduct used is the Contributor Covenant version 1.3.0.
